@@ -33,6 +33,12 @@ class BulletSystem {
 
   //check if bullets leave the screen and remove them from the array
   edges(){
-      
+      for (let i=0; i<this.bullets; i++)
+      {
+        if (this.bullets[i].x < 0 || this.bullets.x[i] > width || this.bullets[i].y < 0 || this.bullets[i].y > height)
+        {
+          this.bullets.splice(i, 1);
+        } 
+      }
   }
 }

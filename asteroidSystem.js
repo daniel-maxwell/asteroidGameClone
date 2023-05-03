@@ -6,6 +6,8 @@ class AsteroidSystem {
     this.velocities = [];
     this.accelerations = [];
     this.diams = [];
+    this.rate = 0.01;
+    this.speedcoef = 0.5;
   }
 
   run(){
@@ -16,8 +18,8 @@ class AsteroidSystem {
 
   // spawns asteroid at random intervals
   spawn(){
-    if (random(1)<0.01){
-      this.accelerations.push(new createVector(0,random(0.1,1)));
+    if (random(1)<this.rate){
+      this.accelerations.push(new createVector(0,random(0.1*this.speedcoef,1*this.speedcoef)));
       this.velocities.push(new createVector(0, 0));
       this.locations.push(new createVector(random(width), 0));
       this.diams.push(random(30,50));

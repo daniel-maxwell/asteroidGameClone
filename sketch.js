@@ -5,6 +5,7 @@ var atmosphereSize;
 var earthLoc;
 var earthSize;
 var starLocs = [];
+var score = 0;
 
 //////////////////////////////////////////////////
 function setup() {
@@ -23,13 +24,16 @@ function setup() {
 function draw() {
   background(0);
   sky();
-
   spaceship.run();
   asteroids.run();
-
   drawEarth();
-
   checkCollisions(spaceship, asteroids); // function that checks collision between various elements
+  fill(255);
+  textSize(26)
+  text('SCORE: ', width/32, height/15);
+  fill(255, 0, 0);
+  textSize(32)
+  text(score, width/8.2, height/14.5);
 }
 
 //////////////////////////////////////////////////
@@ -49,19 +53,45 @@ function drawEarth(){
 function checkCollisions(spaceship, asteroids){
 
     //spaceship-2-asteroid collisions
+    for (let i=0; i < asteroids.locations.length; i++)
+    {
+      if (isInside(spaceship.location, spaceship.size, asteroids.locations[i], asteroids.diams[i])) gameOver();
+    }
 
     //asteroid-2-earth collisions
+    for (let i=0; i < asteroids.locations.length; i++)
+    {
+      if (isInside(earthLoc, earthSize.x, asteroids.locations[i], asteroids.diams[i])) gameOver();
+    }
 
     //spaceship-2-earth
+    if (isInside(earthLoc, earthSize.x, spaceship.location, spaceship.size)) gameOver();
 
     //spaceship-2-atmosphere
+    if (isInside(atmosphereLoc, atmosphereSize.x, spaceship.location, spaceship.size)) spaceship.setNearEarth();
 
     //bullet collisions
+    for (let i=0; i<spaceship.bulletSys.bullets.length; i++)
+    {
+      for (let j=0; j<asteroids.locations.length; j++)
+      {
+        if (isInside(createVector(spaceship.bulletSys.bullets[i].x, spaceship.bulletSys.bullets[i].y),
+                                  spaceship.bulletSys.diam,
+                                  asteroids.locations[j], asteroids.diams[j]))
+        {
+          asteroids.destroy(j); // destroy asteroid
+          score += 1 // increment score
+          asteroids.rate += 0.0005; // increase rate of asteroids
+          if (asteroids.speedcoef < 3) asteroids.speedcoef += 0.1 // increase avg speed of asteroids to a limit
+        } 
+      }
+    }
 }
 
 //////////////////////////////////////////////////
 //helper function checking if there's collision between object A and object B
 function isInside(locA, sizeA, locB, sizeB){
+  return dist(locA.x, locA.y, locB.x, locB.y) < 0.5 * (sizeA + sizeB)  
 }
 
 //////////////////////////////////////////////////

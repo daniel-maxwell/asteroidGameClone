@@ -25,6 +25,10 @@ class Spaceship {
   }
 
   move(){
+      this.velocity.add(this.acceleration);
+      this.location.add(this.velocity);
+      this.acceleration.mult(0);
+      this.velocity.limit(5);
   }
 
   applyForce(f){
@@ -36,10 +40,13 @@ class Spaceship {
         this.applyForce(createVector(-0.1, 0));
       }
       if (keyIsDown(RIGHT_ARROW)){
+        this.applyForce(createVector(0.1, 0));
       }
       if (keyIsDown(UP_ARROW)){
+        this.applyForce(createVector(0, -0.1));
       }
       if (keyIsDown(DOWN_ARROW)){
+        this.applyForce(createVector(0, 0.1));
       }
   }
 
@@ -55,5 +62,10 @@ class Spaceship {
   }
 
   setNearEarth(){
+    let earthPull = createVector(0, 0.05);
+    spaceship.applyForce(earthPull);
+    let friction = createVector(-spaceship.velocity.x/30, -spaceship.velocity.y/30);
+    spaceship.applyForce(friction);
+    
   }
 }
